@@ -37,7 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main'
+    'rest_framework',
+    'rest_framework.authtoken',
+    'account',
+    'djoser',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -70,24 +74,35 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'server.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'tests',
+        'CLIENT': {
+            'host': "mongodb+srv://editor:12evr4r@secret.kikpg.mongodb.net/dbdecide"
+        }
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ]
+}
 
+DJOSER = {
+    'serializers': {
+        'user': 'account.serializer.CreateUserSerializer',
+    }
+}
+
+# User model
+AUTH_USER_MODEL = 'account.User'
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -120,8 +135,15 @@ USE_L10N = True
 
 USE_TZ = True
 
+APPEND_SLASH=False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = (BASE_DIR / 'media').resolve()
+
 STATIC_URL = '/static/'
+

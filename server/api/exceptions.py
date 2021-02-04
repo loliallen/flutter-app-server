@@ -1,0 +1,2 @@
+class NotValidForSerialize(Exception):
+    pass
