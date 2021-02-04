@@ -1,17 +1,11 @@
-FROM python:3.7-alpine
+FROM django:python3
 
+ADD . /my-django-app
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+WORKDIR /my-django-app
 
-COPY . /usr/src/app
+RUN pip install -r requirements.txt
 
-RUN apk add gcc build-base freetype-dev libpng-dev openblas-dev musl-dev
+RUN cd server
 
-RUN apk update
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-EXPOSE 8000
-
-ENTRYPOINT ["python3", "manage.py", "runserver", "8000"]
+CMD [ "python3", "./manage.py runserver 0.0.0.0:8000" ]

@@ -1,8 +1,8 @@
 # from server.main.models import User
 from rest_framework.exceptions import NotFound
 from .exceptions import NotValidForSerialize
-from .models import Diary, Record
-from .serializer import RecordSelializer
+from .models import Diary, Record, TitleRecord
+from .serializer import RecordSelializer, TitleRecordSerializer
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from bson.objectid import ObjectId 
 
@@ -83,3 +83,8 @@ def DeleteRecord(id):
         return serializer.data
     except ObjectDoesNotExist:
         raise NotFound
+
+def GetTitleRecords():
+    records = TitleRecord.objects.all()
+    serializer = TitleRecordSerializer(records, many=True)
+    return serializer.data

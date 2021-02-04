@@ -1,6 +1,6 @@
 from django.conf import settings
 from .ulits import image_to_str, mp3_to_str
-from rest_framework import serializers
+from rest_framework import fields, serializers
 from .models import *
 
 BASE_DIR = settings.MEDIA_ROOT
@@ -26,6 +26,12 @@ class RecordSelializer(serializers.ModelSerializer):
             record.save()
         
         return record
+
+class TitleRecordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TitleRecord
+        fields = "__all__"
+
 
 # class DiarySerializer(serializers.ModelSerializer):
 #     class Meta:

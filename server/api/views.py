@@ -6,11 +6,15 @@ from django.http.response import JsonResponse
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .controller import DeleteRecord, GetRecords, CreateRecord, GetRecord, UpdateRecord
+from .controller import DeleteRecord, GetRecords, CreateRecord, GetRecord, GetTitleRecords, UpdateRecord
 
 # Create your views here.
 
 
+class TitleRecord(APIView):
+    def get(self, request):
+        trecords = GetTitleRecords()
+        return JsonResponse(trecords, safe=False)
 class RecordsList(APIView):
     def get(self, request, format=None):
         print("request.user", request.user.is_authenticated, request.user._id)
