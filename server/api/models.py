@@ -11,7 +11,7 @@ file_type_choice = (
 class Record(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     text = models.TextField()
-    attatched_file = models.FileField(blank=True)
+    attatched_file = models.FileField(blank=True, upload_to="records/")
     file_type = models.TextField(choices=file_type_choice, blank=True)
 
 class Diary(models.Model):
@@ -22,4 +22,4 @@ class Diary(models.Model):
 class TitleRecord(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     text = models.TextField()
-    attatched_file = models.FileField(blank=True)
+    attatched_file = models.FileField(blank=True, upload_to="title_records/")
