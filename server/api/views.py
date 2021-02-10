@@ -6,7 +6,7 @@ from django.http.response import JsonResponse
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .controller import AppendRecordToDiary, CreateDiary, DeleteRecord, GetDiaries, GetRecords, CreateRecord, GetRecord, GetTitleRecords, UpdateRecord
+from .controller import AppendRecordToDiary, CreateDiary, DeleteRecord, GetDiaries, GetRecords, GetRecord, GetTitleRecords, UpdateRecord, GetDiary
 
 # Create your views here.
 
@@ -73,3 +73,9 @@ class DiaryListView(APIView):
             return JsonResponse(data=diary, status=201)
         except NotValidForSerialize:
             return JsonResponse({"message": "error"}, status=403)
+
+class DiaryView(APIView):
+    def get(self, request, id):
+        diary = GetDiary(id, request.user)
+
+        return JsonResponse(data=diary)

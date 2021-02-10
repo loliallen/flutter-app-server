@@ -1,4 +1,5 @@
 # from server.main.models import User
+from typing import OrderedDict
 from account.models import User 
 from django.core import serializers
 from rest_framework.exceptions import NotFound
@@ -7,6 +8,7 @@ from .models import Diary, Record, TitleRecord
 from .serializer import RecordSelializer, TitleRecordSerializer, DiarySerializer
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from bson.objectid import ObjectId 
+from django.forms.models import model_to_dict
 
 import json
 
@@ -55,6 +57,22 @@ def GetDiaries(user_data):
     data = DiarySerializer(user.diaries.all(), many=True)
     print(data.data)
     return data.data
+
+def GetDiary(id, user_data):
+    user_diaries = GetDiaries(user_data)
+    
+    user_diary = {}
+
+    for d in user_diaries:
+        if d.get('_id') == id:
+            user_diary = d
+    # print("diary", model_to_dict(diary))
+    
+    # data 
+    # if data.is_valid():
+    return user_diary   
+    # print(data.errors)
+    # raise NotValidForSerialize
 
 def UpdateDiary(_id, data):
 

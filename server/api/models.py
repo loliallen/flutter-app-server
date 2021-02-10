@@ -10,6 +10,14 @@ file_type_choice = (
     ('s', 'sound'),
     ('i', 'image')
 )
+
+mood_type_choice = (
+    ('1', 'Sad'),
+    ('2', 'Bad'),
+    ('3', 'It\'s ok'),
+    ('4', 'Good'),
+    ('5', 'Happy'),
+)
 class Record(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     text = models.TextField()
@@ -27,6 +35,11 @@ class Diary(models.Model):
     def __str__(self):
         return self.title
 
+class Question(models.Model):
+    _id = models.ObjectIdField(primary_key=True)
+    content = models.TextField()
+    mood = models.TextField(choices=mood_type_choice)
+
 class TitleRecord(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     text = models.TextField()
@@ -41,6 +54,7 @@ def post_title(sender, instance, created, **kwargs):
         if length != None:
             instance.duration = int(length)
             instance.save()
+
 
 signals.post_save.connect(receiver=post_title, sender=TitleRecord)
 
