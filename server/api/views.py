@@ -6,7 +6,7 @@ from django.http.response import JsonResponse
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .controller import DeleteRecord, GetRecords, CreateRecord, GetRecord, GetTitleRecords, UpdateRecord
+from .controller import AppendRecordToDiary, CreateDiary, DeleteRecord, GetDiaries, GetRecords, CreateRecord, GetRecord, GetTitleRecords, UpdateRecord
 
 # Create your views here.
 
@@ -23,8 +23,14 @@ class RecordsList(APIView):
 
     def post(self, request, format=None):
         try:
-            print(request.data)
-            record = CreateRecord(data=request.data)
+
+            diary_id = request.query_params['diary_id']
+            print(diary_id, type(diary_id))
+            record_data = request.data
+            record = AppendRecordToDiary(diary_id, record_data)
+            if not record:
+                return JsonResponse({"message": "Diary not found or Record not found"}, status=404)
+
             return JsonResponse(data=record, status=201)
         except NotValidForSerialize:
             return JsonResponse({"message": "error"}, status=403)
@@ -52,3 +58,18 @@ class RecordsView(APIView):
             return JsonResponse(record, status=200)
         except NotFound:
             return JsonResponse({"message": "id={} not exsits".format(id)}, status=404)
+
+
+class DiaryListView(APIView):
+    def get(self, request):
+        print("request.user", request.user.is_authenticated, request.user._id)
+        diary = GetDiaries(user_data=request.user)
+        return JsonResponse(diary, safe=False)
+
+    def post(self, request):
+        try:
+            print(request.data)
+            diary = CreateDiary(data=request.data, user_data=request.user)
+            return JsonResponse(data=diary, status=201)
+        except NotValidForSerialize:
+            return JsonResponse({"message": "error"}, status=403)

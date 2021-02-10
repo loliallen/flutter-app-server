@@ -16,10 +16,16 @@ class Record(models.Model):
     attatched_file = models.FileField(blank=True, upload_to="records/")
     file_type = models.TextField(choices=file_type_choice, blank=True)
 
+    def __str__(self):
+        return self.text
+
 class Diary(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     title = models.TextField()
-    records = models.ArrayReferenceField(to=Record, on_delete=models.CASCADE)
+    records = models.ArrayReferenceField(to=Record, related_name="diary")
+
+    def __str__(self):
+        return self.title
 
 class TitleRecord(models.Model):
     _id = models.ObjectIdField(primary_key=True)
@@ -39,7 +45,7 @@ def post_title(sender, instance, created, **kwargs):
 signals.post_save.connect(receiver=post_title, sender=TitleRecord)
 
 
-
+    
 
 from mutagen.mp3 import MP3 
 

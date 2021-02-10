@@ -74,15 +74,33 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'server.wsgi.application'
 
+# MONGOADMIN_OVERRIDE_ADMIN = True
+# Database
+# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+
+
+# MongoDB Databases
+# MONGODB_DATABASES = {
+#     'default': {'name': 'diary-app'}
+# }
+
+MONGODB_DATABASES = {
+    "default": {
+        "name": 'flutter-app'
+    }
+}
+
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'tests',
-        'CLIENT': {
-            'host': "mongodb+srv://editor:12evr4r@secret.kikpg.mongodb.net/dbdecide"
-        }
+        'NAME': 'flutter-app',
     }
 }
+
+# AUTHENTICATION_BACKENDS = (
+#     'django_mongoengine.mongo_auth.backends.MongoEngineBackend',
+# )
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -102,7 +120,9 @@ DJOSER = {
 }
 
 # User model
+
 AUTH_USER_MODEL = 'account.User'
+
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -147,3 +167,9 @@ STATIC_ROOT = (BASE_DIR / 'static').resolve()
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = (BASE_DIR / 'media').resolve()
+
+# DATABASE_NAME = "dairy-app"
+# DATABASE_HOST = "localhost:27017"
+# USERNAME = ""
+# PASSWORD = ""
+# mongoengine.connect(db=DATABASE_NAME, host=DATABASE_HOST, username=USERNAME, password=PASSWORD)
