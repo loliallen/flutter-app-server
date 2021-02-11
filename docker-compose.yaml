@@ -1,7 +1,7 @@
 version: '3'
 
 services: 
- backend:
+  backend:
     image: diary-app
     build: ./
     restart: always
