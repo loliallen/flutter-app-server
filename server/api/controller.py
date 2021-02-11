@@ -1,7 +1,5 @@
 # from server.main.models import User
-from typing import OrderedDict
 from account.models import User 
-from django.core import serializers
 from rest_framework.exceptions import NotFound
 from .exceptions import NotValidForSerialize
 from .models import Diary, Record, TitleRecord

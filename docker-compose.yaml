@@ -1,0 +1,32 @@
+version: '3'
+
+services: 
+ backend:
+    image: diary-app
+    build: ./
+    restart: always
+    volumes: 
+      - static:/usr/src/app/static
+      - media:/usr/src/app/media
+    ports:
+      # Socket server
+      - 8000:8000
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:latest
+    # command: [--auth]
+    volumes: 
+      - mongodb_volume:/data/db
+    restart: always
+    ports: 
+      - 27017:27017
+  database:
+    image: mongo:latest
+
+
+    
+volumes:
+  static:
+  media:
+  mongodb_volume:
