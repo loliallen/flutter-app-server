@@ -3,6 +3,7 @@ from django.conf import settings
 from djongo import models
 from django.db.models import signals
 
+from account.models import User
 
 # Create your models here.
 
@@ -18,6 +19,26 @@ mood_type_choice = (
     ('4', 'Good'),
     ('5', 'Happy'),
 )
+
+status_choices = (
+    ('i', 'idle'),
+    ('s', 'searching'),
+    ('r', 'on review'),
+    ('a', 'answered'),
+)
+
+
+class Transfer(models.Model):
+    _id = models.ObjectIdField(primary_key=True)
+    diary = models.ForeignKey(to='api.Diary', on_delete=models.CASCADE, null=True)
+    status = models.TextField(choices=status_choices, default='i')
+    answered = models.BooleanField(default=False)
+
+class Psycologist(models.Model):
+    _id = models.ObjectIdField(primary_key=True)
+    shared_transfers = models.ArrayReferenceField(to=Transfer, related_name='to')
+
+
 class Record(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     text = models.TextField()
@@ -27,6 +48,7 @@ class Record(models.Model):
     def __str__(self):
         return self.text
 
+
 class Diary(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     title = models.TextField()
@@ -35,16 +57,21 @@ class Diary(models.Model):
     def __str__(self):
         return self.title
 
+
 class Question(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     content = models.TextField()
     mood = models.TextField(choices=mood_type_choice)
+
 
 class TitleRecord(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     text = models.TextField()
     attatched_file = models.FileField(blank=True, upload_to="title_records/")
     duration = models.IntegerField(blank=True)
+
+
+
 
 def post_title(sender, instance, created, **kwargs):
     print(sender, instance, created)
@@ -58,8 +85,6 @@ def post_title(sender, instance, created, **kwargs):
 
 signals.post_save.connect(receiver=post_title, sender=TitleRecord)
 
-
-    
 
 from mutagen.mp3 import MP3 
 

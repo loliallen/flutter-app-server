@@ -9,6 +9,7 @@ import json
 
 BASE_DIR = settings.MEDIA_ROOT
 
+
 class RecordSelializer(serializers.ModelSerializer):
     class Meta:
         model = Record
@@ -36,7 +37,6 @@ class TitleRecordSerializer(serializers.ModelSerializer):
         model = TitleRecord
         fields = "__all__"
 
-
 class DiarySerializer(serializers.ModelSerializer):
     records = RecordSelializer(required=False, many=True)
     class Meta:
@@ -55,3 +55,9 @@ class DiarySerializer(serializers.ModelSerializer):
     #     return records
 
     
+class TransferSerializer(serializers.ModelSerializer):
+    diary = DiarySerializer()
+    
+    class Meta:
+        model = Transfer
+        fields = "__all__"

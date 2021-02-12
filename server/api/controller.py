@@ -2,29 +2,59 @@
 from account.models import User 
 from rest_framework.exceptions import NotFound
 from .exceptions import NotValidForSerialize
-from .models import Diary, Record, TitleRecord
-from .serializer import RecordSelializer, TitleRecordSerializer, DiarySerializer
+from .models import Diary, Psycologist, Record, TitleRecord, Transfer
+from .serializer import RecordSelializer, TitleRecordSerializer, DiarySerializer, TransferSerializer
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from bson.objectid import ObjectId 
-from django.forms.models import model_to_dict
 
 import json
 
-# def createRecord(_record, file=None):
-    # try:
-    #     record = Record(_record)
-    #     if file:
-    #         if _record.file_type == 'sound':
-    #             text = mp3_to_str(file)
-    #         else:
-    #             text = image_to_str(file)
+def GetUserTransfers(user_id):
+    user = User.objects.get(_id=ObjectId(user_id))
+    transfers = user.transfers.all()
+
+    data = TransferSerializer(data=transfers, many=True)
+
+    return data.data
+
+def GetPsyTransfers(psy_id):
+    psy = Psycologist.objects.get(_id=ObjectId(psy_id))
+    transfers = psy.shared_transfers.all()
+
+    data = TransferSerializer(data=transfers, many=True)
+
+    return data.data
+
+
+def CreateTransfer(diary_id, user_id, pid = None):
+    """
+        recive:
+            diary_id
+            user_id
+            psy_id
+    """
+    try:
+        user = User.objects.get(_id=ObjectId(user_id))
+        diary = Diary.objects.get(_id=ObjectId(diary_id))
         
-    #         record.text = text
+        transfer = Transfer()
+        transfer.diary_id = diary
         
-    #     record.save()
-    #     return record
-    # except ValidationError:
-    #     raise ValidationError
+        transfer.save()
+        
+        
+        if pid:
+            psy = Psycologist.objects.get(_id=ObjectId(pid))
+            psy.shared_transfers.add(transfer)
+        
+        user.transfers.add(transfer)
+        user.save()
+        return True
+    except Diary.DoesNotExist:
+        return False
+    except Psycologist.DoesNotExist:
+        return False
+    
 
 def CreateDiary(data, user_data):
     try:
@@ -53,7 +83,7 @@ def GetDiaries(user_data):
     print(user.diaries.all())
     
     data = DiarySerializer(user.diaries.all(), many=True)
-    print(data.data)
+    print('data', data.data)
     return data.data
 
 def GetDiary(id, user_data):
@@ -83,7 +113,7 @@ def UpdateDiary(_id, data):
     
     return serializer
 
-def AppendRecordToDiary(diary_id, record_data):
+def AppendRecordToDiary(diary_id, record_data, file=None):
     try:
         diary = Diary.objects.get(_id=ObjectId(diary_id))
 
@@ -101,13 +131,13 @@ def AppendRecordToDiary(diary_id, record_data):
     except NotValidForSerialize:
         raise NotValidForSerialize
 
-
 def GetRecords() -> RecordSelializer:
     records = Record.objects.all()
     serializer = RecordSelializer(records, many=True)
     return serializer
 
 def CreateRecord(data):
+    print(data)
     serializer = RecordSelializer(data=data)
     if serializer.is_valid():
         serializer.save()
@@ -125,8 +155,7 @@ def UpdateRecord(id, data):
         return serializer.data
     except ObjectDoesNotExist:
         raise NotFound
-
-    
+   
 def GetRecord(id) -> RecordSelializer:
     try:
         record = Record.objects.get(_id=ObjectId(id))
@@ -136,8 +165,6 @@ def GetRecord(id) -> RecordSelializer:
         return serializer.data
     except ObjectDoesNotExist:
         raise NotFound
-
-
 
 def DeleteRecord(id):
     try:
@@ -155,7 +182,6 @@ def GetTitleRecords():
     records = TitleRecord.objects.all()
     serializer = TitleRecordSerializer(records, many=True)
     return serializer.data
-
 
 def get_user_with_given_token(token):
     """

@@ -6,9 +6,28 @@ from django.http.response import JsonResponse
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .controller import AppendRecordToDiary, CreateDiary, DeleteRecord, GetDiaries, GetRecords, GetRecord, GetTitleRecords, UpdateRecord, GetDiary
+from .controller import *
 
 # Create your views here.
+
+
+class TransferView(APIView):
+    # get all transfers
+    def get(self, request):
+        pass
+
+    def post(self, request):
+        pid = request.data.get('pid')
+
+        diary_id = request.data.get('diary_id')
+
+        is_created = CreateTransfer(diary_id, request.user._id, pid)
+
+        if is_created:
+            return JsonResponse(data={'message': 'Transfer created'}, status=201)
+        
+        return JsonResponse(data={'message': 'Error while creating transfer'}, status=403)
+        # call function from controller
 
 
 class TitleRecord(APIView):
@@ -16,6 +35,7 @@ class TitleRecord(APIView):
         trecords = GetTitleRecords()
         return JsonResponse(trecords, safe=False)
 class RecordsList(APIView):
+    # parser_classes = [UploadFile]
     def get(self, request, format=None):
         print("request.user", request.user.is_authenticated, request.user._id)
         records = GetRecords()
@@ -23,6 +43,7 @@ class RecordsList(APIView):
 
     def post(self, request, format=None):
         try:
+            print(request.data)
 
             diary_id = request.query_params['diary_id']
             print(diary_id, type(diary_id))
@@ -58,7 +79,6 @@ class RecordsView(APIView):
             return JsonResponse(record, status=200)
         except NotFound:
             return JsonResponse({"message": "id={} not exsits".format(id)}, status=404)
-
 
 class DiaryListView(APIView):
     def get(self, request):

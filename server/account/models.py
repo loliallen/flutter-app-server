@@ -6,6 +6,7 @@ class User(AbstractUser):
     _id = models.ObjectIdField(primary_key=True)
     age = models.IntegerField()
     diaries = models.ArrayReferenceField(to='api.Diary', related_name="author")
+    transfers = models.ArrayReferenceField(to='api.Transfer', related_name="from_user")
     token = models.TextField(max_length=16, unique=True, blank=True)
     token_refresh_date = models.DateField(auto_now_add=True, blank=True)
 
