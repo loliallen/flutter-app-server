@@ -1,1 +1,0 @@
-db.createUser({user: "noisy-bot", pwd: "3141", roles:[{ role: "readWrite",db: "noisy-bot" }]});

@@ -1,4 +1,5 @@
-from django.urls import path, include
+from django.urls import include, path
+
 from .views import *
 
 urlpatterns = [
@@ -8,6 +9,8 @@ urlpatterns = [
     path('diary/', DiaryListView.as_view()),
     path('diary/<str:id>', DiaryView.as_view()),
     path('transfer/', TransferView.as_view()),
-    # path('diary/<str:id>', DiaryView.as_view()),
+    path('question/<str:mood>', QuestionView.as_view()),
+    path('', include('psycologist.urls'))
 ]
-    # path('diary/<str:id>/', RecordsView.as_view()),
+
+# path('diary/<str:id>', DiaryView.as_view()),

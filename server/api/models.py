@@ -3,9 +3,6 @@ from django.conf import settings
 from djongo import models
 from django.db.models import signals
 
-from account.models import User
-
-# Create your models here.
 
 file_type_choice = (
     ('s', 'sound'),
@@ -25,18 +22,27 @@ status_choices = (
     ('s', 'searching'),
     ('r', 'on review'),
     ('a', 'answered'),
+    ('d', 'dismiss'),
 )
 
+
+
+class TransferGroup(models.Model):
+    _id = models.ObjectIdField(primary_key=True)
+    group = models.ArrayReferenceField(
+        to='api.Transfer',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    feedback = models.TextField(blank=True)
 
 class Transfer(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     diary = models.ForeignKey(to='api.Diary', on_delete=models.CASCADE, null=True)
     status = models.TextField(choices=status_choices, default='i')
     answered = models.BooleanField(default=False)
-
-class Psycologist(models.Model):
-    _id = models.ObjectIdField(primary_key=True)
-    shared_transfers = models.ArrayReferenceField(to=Transfer, related_name='to')
+    feedback = models.TextField(blank=True)
 
 
 class Record(models.Model):
@@ -63,6 +69,8 @@ class Question(models.Model):
     content = models.TextField()
     mood = models.TextField(choices=mood_type_choice)
 
+    def __str__(self):
+        return "{} - {}".format(self.content, self.mood)
 
 class TitleRecord(models.Model):
     _id = models.ObjectIdField(primary_key=True)

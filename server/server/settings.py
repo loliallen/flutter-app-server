@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'account',
     'djoser',
     'api',
+    'psycologist'
 ]
 
 MIDDLEWARE = [

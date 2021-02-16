@@ -12,17 +12,22 @@ from .controller import *
 
 
 class TransferView(APIView):
-    # get all transfers
+    # get all user transfers
     def get(self, request):
-        pass
+        # pid = request.data.get('pid')
 
+        transfers = GetUserTransfers(user_id=request.user._id)
+
+        return JsonResponse(transfers, status=200, safe=False)
+
+    # user - create transfer
     def post(self, request):
         pid = request.data.get('pid')
-
         diary_id = request.data.get('diary_id')
-
+        
+        
         is_created = CreateTransfer(diary_id, request.user._id, pid)
-
+        
         if is_created:
             return JsonResponse(data={'message': 'Transfer created'}, status=201)
         
@@ -34,11 +39,13 @@ class TitleRecord(APIView):
     def get(self, request):
         trecords = GetTitleRecords()
         return JsonResponse(trecords, safe=False)
+
 class RecordsList(APIView):
     # parser_classes = [UploadFile]
     def get(self, request, format=None):
         print("request.user", request.user.is_authenticated, request.user._id)
         records = GetRecords()
+        print(records.data)
         return JsonResponse(records.data, safe=False)
 
     def post(self, request, format=None):
@@ -99,3 +106,21 @@ class DiaryView(APIView):
         diary = GetDiary(id, request.user)
 
         return JsonResponse(data=diary)
+        
+class QuestionView(APIView):
+    def get(self, request):
+        questions = GetQuestions()
+        return JsonResponse(questions, safe=False)
+
+
+
+
+
+
+
+
+
+
+
+
+

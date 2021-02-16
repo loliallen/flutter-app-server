@@ -3,7 +3,8 @@ from .ulits import image_to_str, mp3_to_str
 from rest_framework import fields, serializers
 from django.core import serializers as django_serializers 
 from .models import *
-
+from account.serializer import CreateUserSerializer
+from hashlib import sha256 
 
 import json
 
@@ -46,13 +47,9 @@ class DiarySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         diary = Diary(**validated_data) 
         diary.save()
+        
         return diary
 
-    # def get_records(self, instace):
-    #     records = Record.objects.filter(diary=instace)
-    #     records = django_serializers.serialize('json', records)
-    #     # json_string = json.dumps(json.loads(map(lambda x: ({ "_id": x["pk"], "text": x["model"]}), json_string)))
-    #     return records
 
     
 class TransferSerializer(serializers.ModelSerializer):
@@ -61,3 +58,20 @@ class TransferSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transfer
         fields = "__all__"
+
+class TransferGroupSerializer(serializers.ModelSerializer):
+    group = TransferSerializer(many=True)
+
+    class Meta:
+        model = TransferGroup
+        fields = "__all__"
+
+class QuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = "__all__"
+
+
+"""
+
+"""
