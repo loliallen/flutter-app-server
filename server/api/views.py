@@ -6,7 +6,12 @@ from django.http.response import JsonResponse
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .controller import *
+from .controller.Diary import *
+from .controller.Question import *
+from .controller.Record import *
+from .controller.TitleRecord import *
+from .controller.Transfer import *
+from .controller.Psycologist import *
 
 # Create your views here.
 
@@ -15,7 +20,7 @@ class TransferView(APIView):
     # get all user transfers
     def get(self, request):
         # pid = request.data.get('pid')
-
+        
         transfers = GetUserTransfers(user_id=request.user._id)
 
         return JsonResponse(transfers, status=200, safe=False)
@@ -26,12 +31,10 @@ class TransferView(APIView):
         diary_id = request.data.get('diary_id')
         
         
-        is_created = CreateTransfer(diary_id, request.user._id, pid)
+        transfer = CreateTransfer(diary_id, request.user._id, pid)
         
-        if is_created:
-            return JsonResponse(data={'message': 'Transfer created'}, status=201)
         
-        return JsonResponse(data={'message': 'Error while creating transfer'}, status=403)
+        return JsonResponse(data=transfer, status=201)
         # call function from controller
 
 

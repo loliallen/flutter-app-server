@@ -2,6 +2,7 @@
 from django.conf import settings
 from djongo import models
 from django.db.models import signals
+from datetime import datetime
 
 
 file_type_choice = (
@@ -35,6 +36,7 @@ class TransferGroup(models.Model):
         null=True,
         blank=True
     )
+    created = models.DateTimeField(default=datetime.now)
     feedback = models.TextField(blank=True)
 
 class Transfer(models.Model):

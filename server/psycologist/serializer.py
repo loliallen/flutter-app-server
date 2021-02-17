@@ -4,7 +4,7 @@ from django.core import serializers as django_serializers
 from .models import *
 
 from api.serializer import TransferGroupSerializer
-
+from account.serializer import CreateUserSerializer
 
 import json
 
@@ -12,6 +12,7 @@ class PsycologistSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True)
 
     shared_transfers = TransferGroupSerializer(many=True, required=False)
+    patients = CreateUserSerializer(many=True, required=False)
     class Meta:
         model = User
         fields = "__all__"

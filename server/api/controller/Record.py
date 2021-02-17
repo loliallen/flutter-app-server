@@ -2,6 +2,7 @@ from api.models import Record, Diary
 from api.serializer import RecordSelializer
 
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from bson.objectid import ObjectId
 
 def AppendRecordToDiary(diary_id, record_data, file=None):
     try:
@@ -18,8 +19,6 @@ def AppendRecordToDiary(diary_id, record_data, file=None):
         return False
     except Record.DoesNotExist:
         return False
-    except NotValidForSerialize:
-        raise NotValidForSerialize
 
 def GetRecords() -> RecordSelializer:
     records = Record.objects.all()

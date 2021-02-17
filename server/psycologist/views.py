@@ -5,26 +5,28 @@ from rest_framework.response import Response
 from psycologist.controller import *
 import api.controller.Transfer as TransferController
 import json
-
 # Create your views here.
 
 class AuthView(APIView):
-    def post(self, request, format=None):
+    def post(self, request, method_format):
+        print(method_format)
         request_data = request.data
+        print(request_data)
 
         try:
-            if format == "signup":
+            if method_format == "signup":
                 # register
                 user = CreatePsycologist(request_data)
                 return Response(data=user, status=201)
-            elif format == "signin":
+            elif method_format == "signin":
                 user = PsycologistLogin(request_data.get('username'), request_data.get('password'))
                 return Response(user, status=200)
 
-            return JsonResponse({ 'message': 'Undefined format /{}'.format(format)}, status=404 )
+            return JsonResponse({ 'message': 'Undefined format /{}'.format(method_format)}, status=404 )
         except ValidationError:
             return Response({'message': 'Not valid data'}, 403)
-
+        return Response({'message': 'Not valid data'}, 403)
+        
 class UserListView(APIView):
     def get(self, request):
         psys = GetAllPsycologists()
@@ -36,22 +38,33 @@ class UserListView(APIView):
         psy = CreatePsycologist(raw_data)
 
         return Response(data=psy, status=201)
-    def put(self, request):
-        psy_id = request.data.get('psy_id')
-        patient_id = request.data.get('patient_id')
-
-        appended = AppendPatinetForPsycolog(psy_id, patient_id)
-        if not appended:
-            return Response({'message': 'Error while appending'}, status=400)
-        return Response({'message': 'appended'})
     
 class UserView(APIView):
+    def put(self, request, id):
+        updates = request.data
+
+        psy = UpdatePsycologistInfo(id, updates)
+
+        return Response(psy)
+    def delete(self, request, id):
+        DeletePsycologist(id)
+        return Response({'message', 'Psycologist deleted'})
+
+class UserTransfersView(APIView):
     def get(self, request, id):
-        transfers = TransferController.GetTranferGroup(id)
+        print("id", id)
+        transfers = TransferController.GetPsyTransfers(id)
+
         return Response(transfers)
 
     def post(self, request, id):
-        pass
+        tgid = request.data.get('tgid')
+        appended = TransferController.AppendTGToPsycologist(tgid, id)
+
+        if not appended:
+            return Response({'message': 'Not appended'}, 403)
+        return Response({'message': 'Appended'}, 200)
+
     def put(self, request, id):
         updates = request.data
 
@@ -63,14 +76,27 @@ class UserView(APIView):
         return Response(tf)
 
         pass
+
+class UserPatientsView(APIView):
+    # get all patients
+    def get(self, request, id):
+        psy = GetPsycologistById(id)
+
+        return Response(psy)
+
+    def post(self, request, id):
+        psy_id = id
+        patient_id = request.data.get('patient_id')
+
+        appended = AppendPatinetForPsycolog(psy_id, patient_id)
+        if not appended:
+            return Response({'message': 'Error while appending'}, status=400)
+        return Response({'message': 'Appended'})
+
     def delete(self, request, id):
-        pass
-
-class UserTransfersView(APIView):
-    def get(seld, request, id):
-        print("id", id)
-        transfers = TransferController.GetPsyTransfers(id)
-
-        return Response(transfers)
+        psy_id = id
+        patient_id = request.data.get('patient_id')
+        RemovePatientFromPsycologist(psy_id, patient_id)
+        return Response({'message': 'Transfers removed'})
 
 

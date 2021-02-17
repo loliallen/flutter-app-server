@@ -1,0 +1,17 @@
+PSYCOLOGIST
+-----------------------------------------------
+psycologist crud -> /psycologist/<str:id>
+psycologist auth -> /psycologist/auth/<format>
+-----------------------------------------------
+
+Transfers
+-----------------------------------------------
+transfer to psycologist -> []/psycologist/transfers
+	add (can see only one)
+	remove
+patient to psy -> /psy/patients
+	add (only after transfer)
+	remove
+
+
+

@@ -10,13 +10,19 @@ from bson.objectid import ObjectId
 
 def GetUserTransfers(user_id):
     user = User.objects.get(_id=ObjectId(user_id))
-    transfers = user.transfers.all()
+    transfers = user.transfer_groups.all()
 
-    data = TransferSerializer(transfers, many=True)
+    data = TransferGroupSerializer(transfers, many=True)
 
     return data.data
 
 # Psy
+def GetTransfers(filter=None):
+    tgs = TransferGroup.objects.filter(**filter).all()
+
+    data = TransferGroupSerializer(tgs, many=True)
+
+    return data.data
 
 
 def GetPsyTransfers(psy_id):
@@ -32,8 +38,7 @@ def GetPsyTransfers(psy_id):
 
 def GetTranferGroup(tid):
     try:
-        tranfer = TransferGroup.objects.get(_id=IbjectId(tid))
-
+        tranfer = TransferGroup.objects.get(_id=ObjectId(tid))
         data = TransferGroupSerializer(tranfer)
         return data.data
     except TransferGroup.DoesNotExist:
@@ -65,14 +70,15 @@ def CreateTransfer(diary_ids: list, user_id, pid = None):
         if pid:
             psy = Psycologist.objects.get(_id=ObjectId(pid))
             psy.shared_transfers.add(transfer_group)
+            psy.save()
     
         
         user.transfer_groups.add(transfer_group)    
 
-        psy.save()
         user.save()
+        data = TransferGroupSerializer(transfer_group)
 
-        return True
+        return data.data
     except Diary.DoesNotExist:
         return False
     except Psycologist.DoesNotExist:
@@ -93,6 +99,7 @@ def UpdateTransferGroup(tgid, updates):
             transfer = Transfer.objects.get(_id=ObjectId(t_id))
 
             transfer.feedback = feedback
+            transfer.status = 'a'
             transfer.answered = True
             transfer.save()
 
@@ -105,3 +112,21 @@ def UpdateTransferGroup(tgid, updates):
         return None       
     except Transfer.DoesNotExist:
         return None
+
+def AppendTGToPsycologist(tgid, psy_id):
+    try:
+        psy = Psycologist.objects.get(_id=ObjectId(psy_id))
+        tg = TransferGroup.objects.get(_id=ObjectId(tgid))
+
+        # Adds all user groups if user in patients
+
+        psy.shared_transfers.add(tg)
+
+        psy.save()
+
+        return True
+    except Psycologist.DoesNotExist:
+        return False
+    except TransferGroup.DoesNotExist:
+        return False
+    
