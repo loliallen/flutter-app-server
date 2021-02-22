@@ -14,7 +14,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY ./server /usr/src/app
-COPY ./req*.txt /usr/src/app
+COPY ./requirements.txt /usr/src/app
 
 RUN python3 -m pip install --upgrade pip
 RUN pip3 install -r requirements.txt
