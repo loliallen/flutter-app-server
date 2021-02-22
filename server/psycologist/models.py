@@ -6,8 +6,8 @@ from django.db.models import signals
 
 class User(models.Model):
     _id = models.ObjectIdField(primary_key=True)
-    password = models.TextField()
-    name = models.TextField()
+    password = models.TextField(default="*()Shalom")
+    name = models.TextField(default="")
     username = models.TextField(unique=True)
     patients = models.ArrayReferenceField(
         to='account.User', 
