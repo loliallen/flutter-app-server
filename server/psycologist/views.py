@@ -2,6 +2,7 @@ from django.http.response import JsonResponse
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser
 from psycologist.controller import *
 import api.controller.Transfer as TransferController
 import json
@@ -28,6 +29,7 @@ class AuthView(APIView):
         return Response({'message': 'Not valid data'}, 403)
         
 class UserListView(APIView):
+    permission_classes=[IsAdminUser]
     def get(self, request):
         psys = GetAllPsycologists()
         return Response(psys)

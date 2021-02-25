@@ -1,10 +1,13 @@
 FROM ubuntu:18.04
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get install tesseract-ocr -y \
     tesseract-ocr-rus \
+    ffmpeg \
     python3 \
     #python-setuptools \
     python3-pip \
+    python3-opencv \
     && apt-get clean \
     && apt-get autoremove
 

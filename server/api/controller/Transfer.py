@@ -1,7 +1,9 @@
-from api.models import Diary, Transfer, TransferGroup
+from api.models import Diary, Transfer, TransferGroup, Configuration
 from psycologist.models import User as Psycologist
 from api.serializer import TransferSerializer, TransferGroupSerializer
 from account.models import User
+
+from api.exceptions import NotEnoughtDiaries, NotValidForSerialize
 
 from bson.objectid import ObjectId
 
@@ -55,7 +57,15 @@ def CreateTransfer(diary_ids: list, user_id, pid = None):
             psy_id
     """
     try:
+        config = Configuration.objects.all().last()
+
         user = User.objects.get(_id=ObjectId(user_id))
+        
+        count_of_diaries = len(user.diaries)
+
+        if count_of_diaries < config.min_count_of_diaries_for_transfer:
+            raise NotEnoughtDiaries
+
         transfer_group = TransferGroup()
         for diary_id in diary_ids:
             diary = Diary.objects.get(_id=ObjectId(diary_id))
@@ -80,12 +90,11 @@ def CreateTransfer(diary_ids: list, user_id, pid = None):
 
         return data.data
     except Diary.DoesNotExist:
-        return False
+        raise NotValidForSerialize
     except Psycologist.DoesNotExist:
-        return False
+        raise NotValidForSerialize
     except TransferGroup.DoesNotExist as e:
-        print(e.args)
-        return False
+        raise NotValidForSerialize
     
 # Psy
 def UpdateTransferGroup(tgid, updates):

@@ -28,7 +28,8 @@ class RecordSelializer(serializers.ModelSerializer):
                 text = mp3_to_str(record.attatched_file)
             elif validated_data["file_type"] == 'i':
                 text = image_to_str(record.attatched_file)
-            record.text = text
+            record.text += "\n"
+            record.text += text
             record.save()
         
         return record

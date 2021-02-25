@@ -26,7 +26,13 @@ status_choices = (
     ('d', 'dismiss'),
 )
 
+class Configuration(models.Model):
+    _id = models.ObjectIdField(primary_key=True)
+    count_of_questions = models.IntegerField(default=1)
+    min_count_of_diaries_for_transfer = models.IntegerField(default=1)
 
+    def __str__(self):
+        return "coq: {}, mcodft: {}".format(self.count_of_questions, self.min_count_of_diaries_for_transfer)
 
 class TransferGroup(models.Model):
     _id = models.ObjectIdField(primary_key=True)

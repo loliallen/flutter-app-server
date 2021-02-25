@@ -1,0 +1,61 @@
+FROM ubuntu:18.04
+RUN apt-get update \
+    && apt-get install tesseract-ocr -y \
+    tesseract-ocr-rus \
+    ffmpeg \
+    python3 \
+    wget \
+    build-essential \ 
+    cmake \ 
+    git \
+    unzip \ 
+    pkg-config \
+    python-dev \ 
+    python-opencv \ 
+    python-numpy \ 
+    python-pycurl \ 
+    libatlas-base-dev \
+    gfortran \
+    webp \ 
+    qt5-default \
+    zlib1g-dev \
+    #python-setuptools \
+    python3-pip \
+    && apt-get clean \
+    && apt-get autoremove
+
+RUN mkdir -p ~/opencv cd ~/opencv && \
+    wget https://github.com/opencv/opencv/archive/3.0.0.zip && \
+    unzip 3.0.0.zip && \
+    rm 3.0.0.zip && \
+    mv opencv-3.0.0 OpenCV && \
+    cd OpenCV && \
+    mkdir build && \ 
+    cd build && \
+    cmake \
+    -DWITH_QT=ON \ 
+    -DWITH_OPENGL=ON \ 
+    -DFORCE_VTK=ON \
+    -DWITH_TBB=ON \
+    -DWITH_GDAL=ON \
+    -DWITH_XINE=ON \
+    -DBUILD_EXAMPLES=ON .. && \
+    make -j4 && \
+    make install && \ 
+    ldconfig
+
+RUN mkdir -p /usr/src/app 
+
+WORKDIR /usr/src/app
+
+COPY ./server /usr/src/app
+COPY ./requirements.txt /usr/src/app
+
+RUN python3 -m pip install --upgrade pip
+RUN pip3 install -r requirements.txt
+
+RUN ls
+
+EXPOSE 8000
+
+CMD [ "python3", "./manage.py", "runserver", "0.0.0.0:8000" ]
