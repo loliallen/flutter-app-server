@@ -2,8 +2,8 @@
 # Diary App
 
 ## Pre-requirements:
-- tesseract-orc-eng
-- tesseract-orc-rus
+- tesseract-ocr-eng
+- tesseract-ocr-rus
 - opencv (python3-opencv)
 
 ## Start project (without docker)
