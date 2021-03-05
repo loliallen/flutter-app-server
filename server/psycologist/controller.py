@@ -92,3 +92,12 @@ def RemovePatientFromPsycologist(psy_id, patient_id):
         psy.shared_transfers.remove(group)
 
     psy.save()
+
+def GetPsyByToken(headers):
+    if 'Authorization-Psy' in headers:
+        try:
+            token = headers['Authorization-Psy']
+            return Psycologist.objects.get(token=token)
+        except User.DoesNotExist:
+            pass
+    return None

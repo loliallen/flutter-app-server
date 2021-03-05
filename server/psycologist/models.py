@@ -1,8 +1,13 @@
 from django.conf import settings
 from djongo import models
-
+import string
+import random
 from django.db.models import signals
 # Create your models here.
+
+
+def random_string():
+    return ''.join([random.choice(string.ascii_lowercase+string.ascii_uppercase+string.digits) for i in range(64)])
 
 class User(models.Model):
     _id = models.ObjectIdField(primary_key=True)
@@ -21,6 +26,9 @@ class User(models.Model):
         blank=True,
         default=[]    
     )
+
+    token = models.TextField(default=random_string)
+
     def __str__(self):
         return "{}({})".format(self.name, self._id)
 
@@ -29,4 +37,6 @@ def pre_user_save(sender, instance, raw,  **kwargs):
     print(sender, instance, raw)
 
 
+
 signals.pre_save.connect(receiver=pre_user_save, sender=User)
+

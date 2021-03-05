@@ -14,6 +14,8 @@ from .controller.TitleRecord import *
 from .controller.Transfer import *
 from .controller.Psycologist import *
 
+import logging
+
 # Create your views here.
 
 
@@ -40,6 +42,12 @@ class TransferView(APIView):
         finally:
             return Response({"message": "Some server errors"}, status=500) 
 
+class HowMuchDiariesUserNeed(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        userId = request.user._id
+        return Response({"message": "You have not enougth diaties for making transfers"}, status=405) 
+        
 
 class TitleRecord(APIView):
     def get(self, request):
@@ -51,15 +59,15 @@ class RecordsList(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, format=None):
         records = GetRecords()
-        print(records.data)
+        logging.debug(records.data)
         return JsonResponse(records.data, safe=False)
 
     def post(self, request, format=None):
         try:
-            print(request.data)
+            logging.debug(request.data)
 
             diary_id = request.query_params['diary_id']
-            print(diary_id, type(diary_id))
+            logging.debug(diary_id, type(diary_id))
             record_data = request.data
             record = AppendRecordToDiary(diary_id, record_data)
             if not record:
@@ -73,9 +81,7 @@ class RecordsView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, id):
         try:
-            print("id", id)
             record = GetRecord(id)
-            print(record)
             return JsonResponse(record, status=200)
         except NotFound:
             return JsonResponse({"message": "id={} not exsits".format(id)}, status=404)
@@ -89,22 +95,23 @@ class RecordsView(APIView):
 
     def delete(self, request, id):
         try:
-            record = DeleteRecord(id)
-            return JsonResponse(record, status=200)
+            user_id = request.user._id
+            logging.debug(id)
+            record = DeleteRecord(user_id=user_id, record_id=id)
+            return Response(record, status=200)
         except NotFound:
             return JsonResponse({"message": "id={} not exsits".format(id)}, status=404)
 
 class DiaryListView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
-        print("request.user", request.user.is_authenticated, request.user._id)
+        logging.debug("request.user", request.user.is_authenticated, request.user._id)
         
         diary = GetDiaries(user_data=request.user)
         return JsonResponse(diary, safe=False)
 
     def post(self, request):
         try:
-            print(request.data)
             diary = CreateDiary(data=request.data, user_data=request.user)
             return JsonResponse(data=diary, status=201)
         except NotValidForSerialize:

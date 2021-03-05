@@ -139,3 +139,15 @@ def AppendTGToPsycologist(tgid, psy_id):
     except TransferGroup.DoesNotExist:
         return False
     
+
+def CheckAbleToTransfer(userId):
+    config = Configuration.objects.all().last()
+    user = User.objects.get(_id=ObjectId(user_id))
+
+    psycologist = user.psycologist
+
+    tg_l = len(user.transfer_groups)
+
+    if psycologist != None:
+        # psycologist.
+        pass

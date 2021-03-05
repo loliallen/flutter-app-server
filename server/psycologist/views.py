@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
 from psycologist.controller import *
 import api.controller.Transfer as TransferController
+from .models import User
 import json
 # Create your views here.
 
@@ -42,6 +43,7 @@ class UserListView(APIView):
         return Response(data=psy, status=201)
     
 class UserView(APIView):
+    permission_classes = [IsAdminUser]
     def put(self, request, id):
         updates = request.data
 
@@ -53,13 +55,20 @@ class UserView(APIView):
         return Response({'message', 'Psycologist deleted'})
 
 class UserTransfersView(APIView):
-    def get(self, request, id):
-        print("id", id)
-        transfers = TransferController.GetPsyTransfers(id)
+    def get(self, request):
+        
+        psy = request.psy
+        if psy == None:
+            return Response({'message': 'Not authed'}), 401
+
+        transfers = TransferController.GetPsyTransfers(psy._id)
 
         return Response(transfers)
 
     def post(self, request, id):
+        if request.user == None:
+            return Response({'message': 'Not authed'}), 401
+        
         tgid = request.data.get('tgid')
         appended = TransferController.AppendTGToPsycologist(tgid, id)
 
@@ -77,10 +86,10 @@ class UserTransfersView(APIView):
 
         return Response(tf)
 
-        pass
 
 class UserPatientsView(APIView):
     # get all patients
+    permission_classes = [IsAdminUser]
     def get(self, request, id):
         psy = GetPsycologistById(id)
 

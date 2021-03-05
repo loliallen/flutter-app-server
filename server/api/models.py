@@ -29,6 +29,7 @@ status_choices = (
 class Configuration(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     count_of_questions = models.IntegerField(default=1)
+    count_of_diaries_each_day_for_psycologist = models.IntegerField(default=1)
     min_count_of_diaries_for_transfer = models.IntegerField(default=1)
 
     def __str__(self):

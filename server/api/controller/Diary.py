@@ -43,13 +43,9 @@ def GetDiary(id, user_data):
     for d in user_diaries:
         if d.get('_id') == id:
             user_diary = d
-    # print("diary", model_to_dict(diary))
-    
-    # data 
-    # if data.is_valid():
+            
     return user_diary   
-    # print(data.errors)
-    # raise NotValidForSerialize
+    
 
 def UpdateDiary(_id, data):
 
