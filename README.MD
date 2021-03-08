@@ -1,6 +1,8 @@
 
 # Diary App
 
+## [API](./resources/API.md)
+
 ## Pre-requirements:
 - tesseract-ocr-eng
 - tesseract-ocr-rus
