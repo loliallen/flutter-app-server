@@ -38,7 +38,7 @@ def GetPsycologistById(psy_id):
     return data.data
 
 def CreatePsycologist(data):
-    print(data)
+    
     try:
         psy_data = PsycologistSerializer(data=data)
 

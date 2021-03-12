@@ -48,6 +48,7 @@ def GetTranferGroup(tid):
 
 # User
 
+EXTRA_WAIT = 7
 
 def CreateTransfer(diary_ids: list, user_id, pid = None):
     """
@@ -63,7 +64,10 @@ def CreateTransfer(diary_ids: list, user_id, pid = None):
         
         count_of_diaries = len(user.diaries)
 
-        if count_of_diaries < config.min_count_of_diaries_for_transfer:
+        if user.psycologist != None:
+            if count_of_diaries < len(user.psycologist.shared_transfers) / (config.min_count_of_diaries_for_transfer + 1 ) + EXTRA_WAIT:
+                raise NotEnoughtDiaries
+        elif count_of_diaries < config.min_count_of_diaries_for_transfer:
             raise NotEnoughtDiaries
 
         transfer_group = TransferGroup()
@@ -75,12 +79,18 @@ def CreateTransfer(diary_ids: list, user_id, pid = None):
             transfer.save()
             transfer_group.group.add(transfer)            
         
-        transfer_group.save()
         
         if pid:
+            #  Added send transfer on moderation if psy is not verified
             psy = Psycologist.objects.get(_id=ObjectId(pid))
-            psy.shared_transfers.add(transfer_group)
+            if(psy.verified):
+                psy.shared_transfers.add(transfer_group)
+            else:
+                transfer_group.moderation_status = 'r'
+                psy.possible_transfers.add(transfer_group)
             psy.save()
+
+        transfer_group.save()
     
         
         user.transfer_groups.add(transfer_group)    
@@ -97,10 +107,14 @@ def CreateTransfer(diary_ids: list, user_id, pid = None):
         raise NotValidForSerialize
     
 # Psy
-def UpdateTransferGroup(tgid, updates):
+def UpdateTransferGroup(tgid, updates, psy):
     try:
+
         transfer_group = TransferGroup.objects.get(_id=ObjectId(tgid))
         
+        if not psy.verified:
+            transfer_group.moderation_status = 'r'
+
         for update in updates['group']:
             t_id = update['tid']
             feedback = update['fb']
@@ -108,11 +122,26 @@ def UpdateTransferGroup(tgid, updates):
             transfer = Transfer.objects.get(_id=ObjectId(t_id))
 
             transfer.feedback = feedback
-            transfer.status = 'a'
             transfer.answered = True
             transfer.save()
 
         transfer_group.feedback = updates['feedback']
+        transfer.status = 'a'
+        transfer_group.save()
+
+        data = TransferGroupSerializer(transfer_group)
+        return data.data
+    except TransferGroup.DoesNotExist:
+        return None       
+    except Transfer.DoesNotExist:
+        return None
+
+
+def UpdateTransferGroupStatus(tgid, updates, psy):
+    try:
+        transfer_group = TransferGroup.objects.get(_id=ObjectId(tgid))
+        
+        transfer_group.moderation_status = updates['moderation_status']
         transfer_group.save()
 
         data = TransferGroupSerializer(transfer_group)

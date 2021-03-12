@@ -26,6 +26,19 @@ class User(models.Model):
         blank=True,
         default=[]    
     )
+    possible_transfers = models.ArrayReferenceField(
+        to='api.TransferGroup', 
+        related_name='to_possible',
+        blank=True,
+        default=[]    
+    )
+    done_transfers = models.ArrayReferenceField(
+        to='api.TransferGroup', 
+        related_name='to_done',
+        blank=True,
+        default=[]    
+    )
+    verified = models.BooleanField(default=False)
 
     token = models.TextField(default=random_string)
 

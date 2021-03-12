@@ -78,8 +78,8 @@ class UserTransfersView(APIView):
 
     def put(self, request, id):
         updates = request.data
-
-        tf = TransferController.UpdateTransferGroup(id, updates)
+        psy = request.psy
+        tf = TransferController.UpdateTransferGroup(id, updates, psy)
         
         if not tf:
             return Response({'message', 'Bad request'}, status=403)
@@ -89,6 +89,7 @@ class UserTransfersView(APIView):
 
 class UserPatientsView(APIView):
     # get all patients
+    # supervisor
     permission_classes = [IsAdminUser]
     def get(self, request, id):
         psy = GetPsycologistById(id)
@@ -102,6 +103,17 @@ class UserPatientsView(APIView):
         appended = AppendPatinetForPsycolog(psy_id, patient_id)
         if not appended:
             return Response({'message': 'Error while appending'}, status=400)
+        return Response({'message': 'Appended'})
+
+    # moderate transaction
+    def put(self, request, id):
+        psy_id = id
+        patient_id = request.data.get('patient_id')
+        tgid = request.data.get('tgid')
+        updates = request.data.get('updates')
+
+        transfer = TransferController.UpdateTransferGroupStatus(tgid, updates, psy_id)
+        
         return Response({'message': 'Appended'})
 
     def delete(self, request, id):

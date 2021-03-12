@@ -25,6 +25,12 @@ status_choices = (
     ('a', 'answered'),
     ('d', 'dismiss'),
 )
+moderation_status_choices = (
+    ('n', 'none'),
+    ('r', 'on review'),
+    ('c', 'confirmed'),
+    ('d', 'dismiss'),
+)
 
 class Configuration(models.Model):
     _id = models.ObjectIdField(primary_key=True)
@@ -43,13 +49,14 @@ class TransferGroup(models.Model):
         null=True,
         blank=True
     )
+    status = models.TextField(choices=status_choices, default='i')
+    moderation_status = models.TextField(choices=moderation_status_choices, default='n')
     created = models.DateTimeField(default=datetime.now)
     feedback = models.TextField(blank=True)
 
 class Transfer(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     diary = models.ForeignKey(to='api.Diary', on_delete=models.CASCADE, null=True)
-    status = models.TextField(choices=status_choices, default='i')
     answered = models.BooleanField(default=False)
     feedback = models.TextField(blank=True)
 
