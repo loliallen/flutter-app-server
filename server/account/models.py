@@ -13,8 +13,18 @@ class User(AbstractUser):
     _id = models.ObjectIdField(primary_key=True)
     age = models.IntegerField()
     diaries = models.ArrayReferenceField(to='api.Diary', related_name="author")
-    transfer_groups = models.ArrayReferenceField(to='api.TransferGroup', related_name="from_user")
-    done_transfer_groups = models.ArrayReferenceField(to='api.TransferGroup', related_name="from_done")
+    transfer_groups = models.ArrayReferenceField(
+        to='api.TransferGroup', 
+        related_name="from_user",
+        blank=True,
+        default=[]
+    )
+    done_transfer_groups = models.ArrayReferenceField(
+        to='api.TransferGroup', 
+        related_name="from_done",
+        blank=True,
+        default=[]
+    )
   
 
 
