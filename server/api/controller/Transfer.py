@@ -40,7 +40,7 @@ def GetPsyTransfers(psy_id):
 
 def GetTranferGroup(tid):
     try:
-        tranfer = TransferGroup.objects.get(_id=ObjectId(tid))
+        tranfer = TransferGroup.objects.get(_id=ObjectId(tid), moderation_status='c'    )
         data = TransferGroupSerializer(tranfer)
         return data.data
     except TransferGroup.DoesNotExist:
@@ -64,6 +64,7 @@ def CreateTransfer(diary_ids: list, user_id, pid = None):
         
         count_of_diaries = len(user.diaries)
 
+        #  TODO
         if user.psycologist != None:
             if count_of_diaries < len(user.psycologist.shared_transfers) / (config.min_count_of_diaries_for_transfer + 1 ) + EXTRA_WAIT:
                 raise NotEnoughtDiaries
@@ -107,7 +108,7 @@ def CreateTransfer(diary_ids: list, user_id, pid = None):
         raise NotValidForSerialize
     
 # Psy
-def UpdateTransferGroup(tgid, updates, psy):
+def UpdateTransferGroup(tgid, updates, psy: Psycologist):
     try:
 
         transfer_group = TransferGroup.objects.get(_id=ObjectId(tgid))
@@ -126,8 +127,14 @@ def UpdateTransferGroup(tgid, updates, psy):
             transfer.save()
 
         transfer_group.feedback = updates['feedback']
-        transfer.status = 'a'
+        transfer.status = updates['feedback']
         transfer_group.save()
+
+        # if transfer is done, remove it and append to `done` 
+        if (transfer.status == "a"):
+            psy.shared_transfers.remove(transfer_group)
+            psy.done_transfers.add(transfer_group)
+            psy.save()
 
         data = TransferGroupSerializer(transfer_group)
         return data.data

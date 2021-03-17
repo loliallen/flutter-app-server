@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'account',
     'djoser',
     'api',
-    'psycologist'
+    'psycologist',
+    'supervisor'
 ]
 
 MIDDLEWARE = [
@@ -118,7 +119,8 @@ REST_FRAMEWORK = {
 DJOSER = {
     'serializers': {
         'user': 'account.serializer.CreateUserSerializer',
-    }
+    },
+    "LOGIN_FIELD": "email"
 }
 
 # User model

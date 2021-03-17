@@ -9,6 +9,19 @@ class EmbQuestion(models.Model):
     class Meta:
         abstract = True
 
+
+SEX_CHOICES = (
+    ('F', 'female'),
+    ('M', 'male'),
+)
+
+class Child(models.Model):
+    sex = models.TextField(choices=SEX_CHOICES) 
+    age = models.IntegerField(default=0)
+
+    class Meta:
+        abstract = True
+
 class User(AbstractUser):
     _id = models.ObjectIdField(primary_key=True)
     age = models.IntegerField()
@@ -25,6 +38,7 @@ class User(AbstractUser):
         blank=True,
         default=[]
     )
+    children = models.EmbeddedField(Child)
   
 
 

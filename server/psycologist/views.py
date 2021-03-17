@@ -86,7 +86,6 @@ class UserTransfersView(APIView):
 
         return Response(tf)
 
-
 class UserPatientsView(APIView):
     # get all patients
     # supervisor
