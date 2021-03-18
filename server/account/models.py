@@ -22,6 +22,7 @@ class Child(models.Model):
     class Meta:
         abstract = True
 
+
 class User(AbstractUser):
     _id = models.ObjectIdField(primary_key=True)
     age = models.IntegerField()
@@ -32,13 +33,17 @@ class User(AbstractUser):
         blank=True,
         default=[]
     )
+    username = models.TextField(unique=True)
+    email = models.EmailField(unique=True)
     done_transfer_groups = models.ArrayReferenceField(
         to='api.TransferGroup', 
         related_name="from_done",
         blank=True,
         default=[]
     )
-    children = models.EmbeddedField(Child, blank=True, null=True)
+    children = models.ArrayField(Child, default=[], null=True)
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ['username']
   
 
 
