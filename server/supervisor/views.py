@@ -42,4 +42,22 @@ class SupervisorAuth(APIView):
     #     sups = getAll()
     #     return Response(sups)
 
-    
+
+#  supervisor transfers
+class TransferList(APIView):
+    def get(self, request):
+        trgs = GetTransfers()
+        return Response(trgs)
+
+class TransferView(APIView):
+    def get(self, request, tid):
+        try:
+            group = getTransferGroupById(tid)
+            return Response(group)
+        except:
+            return Response({'message': "Transfer not found"}, status=400)
+    def put(self, request, tid):
+        data = request.data.get('updates')
+
+        return Response("p")
+        

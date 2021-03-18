@@ -28,7 +28,8 @@ class AuthView(APIView):
         except ValidationError:
             return Response({'message': 'Not valid data'}, 403)
         return Response({'message': 'Not valid data'}, 403)
-        
+       
+# TODO add to supervisor 
 class UserListView(APIView):
     permission_classes=[IsAdminUser]
     def get(self, request):
@@ -41,7 +42,8 @@ class UserListView(APIView):
         psy = CreatePsycologist(raw_data)
 
         return Response(data=psy, status=201)
-    
+
+# TODO add to supervisor
 class UserView(APIView):
     permission_classes = [IsAdminUser]
     def put(self, request, id):
@@ -65,16 +67,17 @@ class UserTransfersView(APIView):
 
         return Response(transfers)
 
-    def post(self, request, id):
-        if request.user == None:
-            return Response({'message': 'Not authed'}), 401
+    # def post(self, request, id):
+    # TODO move to supervisors
+    #     if request.user == None:
+    #         return Response({'message': 'Not authed'}), 401
         
-        tgid = request.data.get('tgid')
-        appended = TransferController.AppendTGToPsycologist(tgid, id)
+    #     tgid = request.data.get('tgid')
+    #     appended = TransferController.AppendTGToPsycologist(tgid, id)
 
-        if not appended:
-            return Response({'message': 'Not appended'}, 403)
-        return Response({'message': 'Appended'}, 200)
+    #     if not appended:
+    #         return Response({'message': 'Not appended'}, 403)
+    #     return Response({'message': 'Appended'}, 200)
 
     def put(self, request, id):
         updates = request.data
@@ -89,7 +92,6 @@ class UserTransfersView(APIView):
 class UserPatientsView(APIView):
     # get all patients
     # supervisor
-    permission_classes = [IsAdminUser]
     def get(self, request, id):
         psy = GetPsycologistById(id)
 

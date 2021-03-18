@@ -20,7 +20,12 @@ def GetUserTransfers(user_id):
 
 # Psy
 def GetTransfers(filter=None):
-    tgs = TransferGroup.objects.filter(**filter).all()
+    # TODO select fields
+    tgs = []
+    if filter != None:
+        tgs = TransferGroup.objects.filter(**filter).all()
+    else:
+        tgs = TransferGroup.objects.all()
 
     data = TransferGroupSerializer(tgs, many=True)
 
@@ -127,7 +132,7 @@ def UpdateTransferGroup(tgid, updates, psy: Psycologist):
             transfer.save()
 
         transfer_group.feedback = updates['feedback']
-        transfer.status = updates['feedback']
+        transfer.status = updates['status']
         transfer_group.save()
 
         # if transfer is done, remove it and append to `done` 

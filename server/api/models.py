@@ -49,7 +49,7 @@ class TransferGroup(models.Model):
         null=True,
         blank=True
     )
-    status = models.TextField(choices=status_choices, default='i')
+    status = models.TextField(choices=status_choices, default='s')
     moderation_status = models.TextField(choices=moderation_status_choices, default='n')
     created = models.DateTimeField(default=datetime.now)
     feedback = models.TextField(blank=True)
