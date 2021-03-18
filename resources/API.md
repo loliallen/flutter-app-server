@@ -5,6 +5,8 @@
 - [TitleRecord](#-titlerecord)
 - [Psycologist(Psychologist)](#-psycologist)
 - [Questions](#-questions)
+- [Transfers](#-transfers)
+- [Supervisors](#-supervisors)
 
 
 # User
@@ -171,6 +173,8 @@ Response:
     }
 ]
 ```
+
+
 -----
 -----
 -----
@@ -190,8 +194,29 @@ Body:
 }
 ```
 
+
+### Get Patients
+
+> GET /api/psycologists/patients/<id>
+
+### Append Patient
+
+> POST /api/psycologists/patients/<id>
+
+body:
+```json
+{
+    "patient_id": "<ID>"
+}
+```
+
+
+
 ### Register
+
+
 > POST api/psycologists/authentication/signup
+>> U can also create a psychologist with with endpoint
 
 Body:
 ```json
@@ -202,8 +227,53 @@ Body:
 }
 ```
 
- - Get diaries
- - Get patients
+### Get Diaries(Transfers)
+> GET api/psycologists/transfers/
+> will return all transfer groups for psycologist
+
+
+### Append Diary(Transfer)
+> PUT api/psycologists/transfers/
+> will updated transfer group
+
+body:
+```json
+{
+    "group": [
+        {
+            "tid": "<transferId>",
+            "fb" : "transfer feedback"
+        },
+        {
+            "tid": "<transferId>",
+            "fb" : "transfer feedback"
+        },
+    ],
+    "feedback": "transfer group feedback",
+    "status": "a|d"
+}
+```
+
+Status:
+| Key | Desc |
+| --- | ---- |
+| a | Answered |
+| d | Dismissed | 
+
+
+## Update Psycologist Info
+
+> PUT api/psycologists/manage/<str:id>
+
+body:
+```json
+{
+    "delay_duration": 0,
+    "verified": true,
+}
+```
+
+
 -----
 -----
 -----
@@ -230,3 +300,6 @@ Response:
     }
 ]
 ```
+
+[Postman collection link](https://www.getpostman.com/collections/7f5a9d73a871df1bf15c)
+

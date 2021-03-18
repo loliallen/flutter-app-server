@@ -38,7 +38,7 @@ class User(AbstractUser):
         blank=True,
         default=[]
     )
-    children = models.EmbeddedField(Child)
+    children = models.EmbeddedField(Child, blank=True, null=True)
   
 
 
