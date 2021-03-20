@@ -1,5 +1,5 @@
-from api.models import Psycologist
-from api.serializer import PsycologistSerializer
+from psycologist.models import User as Psycologist
+from psycologist.serializer import PsycologistSerializer
 from account.models import User
 from django.core.exceptions import ValidationError
 
