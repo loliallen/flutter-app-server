@@ -1,69 +1,69 @@
-# from api.models import Psycologist
-# from api.serializer import PsycologistSerializer
-# from account.models import User
-# from django.core.exceptions import ValidationError
+from api.models import Psycologist
+from api.serializer import PsycologistSerializer
+from account.models import User
+from django.core.exceptions import ValidationError
 
-# from bson.objectid import ObjectId
-
-
-# def compare_passwords(p1, p2):
-#     return p1 == p2
+from bson.objectid import ObjectId
 
 
-# def PsycologistLogin(username, password):
-#     try:
-#         psy = Psycologist.objects.filter(username=username).first()
-
-#         if not compare_passwords(password, psy.password):
-#             raise ValidationError
-#         data = PsycologistSerializer(psy)
-#         return data.data
-#     except Psycologist.DoesNotExist:
-#         raise ValidationError
+def compare_passwords(p1, p2):
+    return p1 == p2
 
 
-# def GetAllPsycologists():
-#     psys = Psycologist.objects.all()
+def PsycologistLogin(username, password):
+    try:
+        psy = Psycologist.objects.filter(username=username).first()
 
-#     data = PsycologistSerializer(psys, many=True)
+        if not compare_passwords(password, psy.password):
+            raise ValidationError
+        data = PsycologistSerializer(psy)
+        return data.data
+    except Psycologist.DoesNotExist:
+        raise ValidationError
 
-#     return data.data
+
+def GetAllPsycologists():
+    psys = Psycologist.objects.all()
+
+    data = PsycologistSerializer(psys, many=True)
+
+    return data.data
 
 
-# def GetPsycologistById(psy_id):
-#     psy = Psycologist.objects.get(_id=ObjectId(psy_id))
+def GetPsycologistById(psy_id):
+    psy = Psycologist.objects.get(_id=ObjectId(psy_id))
 
-#     data = PsycologistSerializer(psy)
+    data = PsycologistSerializer(psy)
 
-#     return data.data
+    return data.data
 
-# def CreatePsycologist(data):
-#     print(data)
-#     psy_data = PsycologistSerializer(data=data)
+def CreatePsycologist(data):
+    print(data)
+    psy_data = PsycologistSerializer(data=data)
 
-#     if psy_data.is_valid():
-#         psy_data.save()
-#         return psy_data
+    if psy_data.is_valid():
+        psy_data.save()
+        return psy_data
     
-#     raise ValidationError
+    raise ValidationError
 
-# def UpdatePsycologistInfo(new_info):
-#     psy = Psycologist.objects.get(_id=ObjectId(psy_id))
+def UpdatePsycologistInfo(new_info):
+    psy = Psycologist.objects.get(_id=ObjectId(psy_id))
 
-#     #  set updatable fields
+    #  set updatable fields
 
 
-# def AppendPatinetForPsycolog(psy_id, patient_id):
-#     patient = User.objects.get(_id=ObjectId(patient_id))
-#     psy = Psycologist.objects.get(_id=ObjectId(psy_id))
+def AppendPatinetForPsycolog(psy_id, patient_id):
+    patient = User.objects.get(_id=ObjectId(patient_id))
+    psy = Psycologist.objects.get(_id=ObjectId(psy_id))
 
-#     psy.patients.add(patient)
+    psy.patients.add(patient)
 
-#     psy.save() 
-#     return True
+    psy.save() 
+    return True
 
-# def DeletePsycologist(psy_id):
-#     psy = Psycologist.objects.get(_id=ObjectId(psy_id))
-#     psy.delete()
+def DeletePsycologist(psy_id):
+    psy = Psycologist.objects.get(_id=ObjectId(psy_id))
+    psy.delete()
 
-#     return True
+    return True

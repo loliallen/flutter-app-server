@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
 from .controller import *
+from psycologist.controller import AppendPatinetForPsycolog, CreatePsycologist, GetAllPsycologists, GetPsycologistById, DeletePsycologist, UpdatePsycologistInfo 
 import json
 
 # create and get list for admins
@@ -61,3 +62,43 @@ class TransferView(APIView):
 
         return Response("p")
         
+
+
+        
+class PsycologistManageList(APIView):
+    def get(self, request):
+        psys = GetAllPsycologists()
+        return Response(psys)
+    def post(self, request):
+        data = request.data
+
+        try:
+            psy = CreatePsycologist(data)
+            return Response(psy, status=201)
+        except:
+            return Response({'message': "error"}, status=400)
+
+
+class PsycologistManage(APIView):
+    def get(self, request, id):
+        try:
+            psy = GetPsycologistById(id)
+            return Response(psy, status=200)
+        except:
+            return Response({'message': "error"}, status=400)
+
+    def put(self, request, id):
+        data = request.data
+        
+        try:
+            psy = UpdatePsycologistInfo(id, data)
+            return Response(psy, status=200)
+        except:
+            return Response({'message': "error"}, status=400)
+
+    def delete(self, request, id):
+        try:
+            psy = DeletePsycologist(id)
+            return Response(psy)
+        except:
+            return Response({'message': "error"}, status=400)
