@@ -161,6 +161,8 @@ body:
 }
 ```
 
+> Provide `Authorization-Psy: <token>`
+
 ## Transfers (Psy)
 
 ### Get Transfers
