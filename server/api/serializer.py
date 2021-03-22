@@ -73,6 +73,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-"""
-
-"""
+class ConfigurationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Configuration
+        fields = "__all__"

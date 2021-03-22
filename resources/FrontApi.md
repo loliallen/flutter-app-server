@@ -67,6 +67,20 @@ Response:
 ]
 ```
 
+### Edit Supervisor
+
+> PUT api/admin/supervisor/<str:id>
+
+Body:
+```json
+{
+    "name":"name",
+    "email":"email",
+    "password":"pwd",
+}
+```
+
+
 ### Basic Authenication (not confirmed)
 
 > POST /supervisor/authentication/signin
@@ -79,7 +93,47 @@ Body:
 }
 ```
 
-# Psychologists
+
+
+### Update Transfer
+
+> supervisor/transfers/<str:id>
+
+Moderations Status
+| Key | Desc |
+| --- | ---- |
+| r | on review |
+| c | confirmed |
+| d | dismiss |
+
+Body:
+```json
+{
+    "group": [
+        {
+            "tid": "",
+            "comment": ""
+        }
+    ],
+    "status": "r|c|d"
+}
+```
+
+### Get Transfer(s)
+
+Get Transfers
+> GET supervisor/transfers/
+
+Get Transfer By ID
+> GET supervisor/transfers/<str:id>
+
+Get User Transfers
+> GET supervisor/user/transfers/<str:uid>
+
+Get Psycologist Transfers
+> GET supervisor/psy/transfers/<str:uid>
+
+# Psychologists 
 
 ## Authenication
 
@@ -107,7 +161,7 @@ body:
 }
 ```
 
-## Transfers
+## Transfers (Psy)
 
 ### Get Transfers
 > GET /api/psycologists/transfers/
@@ -150,7 +204,7 @@ response:
     ...?
 ```
 
-# Supervisor
+# Supervisor (Manage)
 
 ## Psycologist patients
 
@@ -169,6 +223,7 @@ body:
 
 ### Remove patient from psy
 
+
 > DELETE /api/psycologists/patients/<str:id>
 >> id - psychologist ID
 
@@ -177,5 +232,37 @@ body:
 ```json
 {
     "patient_id" : "patient_id"
+}
+```
+
+
+
+
+
+
+## Config
+
+### Edit/Read Config
+
+> PUT api/admin/settings/ 
+
+Body:
+```json
+{
+    "count_of_questions": 0,
+    "min_count_of_diaries_for_transfer": 0,
+    "count_of_diaries_each_day_for_psycologist": 0
+}
+```
+
+
+> GET api/admin/settings/ 
+
+Response:
+```json
+{
+    "count_of_questions": 0,
+    "min_count_of_diaries_for_transfer": 0,
+    "count_of_diaries_each_day_for_psycologist": 0
 }
 ```

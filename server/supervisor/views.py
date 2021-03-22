@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
 from .controller import *
 from psycologist.controller import AppendPatinetForPsycolog, CreatePsycologist, GetAllPsycologists, GetPsycologistById, DeletePsycologist, UpdatePsycologistInfo 
+import api.controller.Transfer as TransferController
 import json
 
 # create and get list for admins
@@ -59,12 +60,25 @@ class TransferView(APIView):
             return Response({'message': "Transfer not found"}, status=400)
     def put(self, request, tid):
         data = request.data.get('updates')
+        try:
 
-        return Response("p")
-        
+            gr = updateTransferGroupTransfer(tid, data)
+
+            return Response(gr)
+        except:
+            return Response({'message': "Transfer not found"}, status=400)
+    
+class UserTransferView(APIView):
+    def get(self, request, uid):
+        tgs = TransferController.GetUserTransfers(uid)
+        return Response(tgs)
+
+class PsyTransferView(APIView):
+    def get(self, request, pid):
+        tgs = TransferController.GetPsyTransfers(pid)
+        return Response(tgs) 
 
 
-        
 class PsycologistManageList(APIView):
     def get(self, request):
         psys = GetAllPsycologists()

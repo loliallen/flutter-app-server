@@ -59,6 +59,7 @@ class Transfer(models.Model):
     diary = models.ForeignKey(to='api.Diary', on_delete=models.CASCADE, null=True)
     answered = models.BooleanField(default=False)
     feedback = models.TextField(blank=True)
+    moderation_feedback = models.TextField(blank=True)
 
 
 class Record(models.Model):
