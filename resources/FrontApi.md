@@ -163,6 +163,8 @@ body:
 
 > Provide `Authorization-Psy: <token>`
 
+also check this [api](./API.md)
+
 ## Transfers (Psy)
 
 ### Get Transfers
