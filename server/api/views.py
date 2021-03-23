@@ -39,8 +39,6 @@ class TransferView(APIView):
             return Response({"message": "Some object not valid"}, status=403) 
         except NotEnoughtDiaries:
             return Response({"message": "You have not enougth diaties for making transfers"}, status=405) 
-        finally:
-            return Response({"message": "Some server errors"}, status=500) 
 
 class HowMuchDiariesUserNeed(APIView):
     permission_classes = [IsAuthenticated]
