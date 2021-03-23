@@ -67,8 +67,9 @@ def CreateTransfer(diary_ids: list, user_id, pid = None):
 
         user = User.objects.get(_id=ObjectId(user_id))
         
-        count_of_diaries = len(user.diaries)
+        count_of_diaries = len(user.diaries.all())
 
+        print(count_of_diaries, diary_ids)
         #  TODO
         if user.psycologist != None:
             if count_of_diaries < len(user.psycologist.shared_transfers) / (config.min_count_of_diaries_for_transfer + 1 ) + EXTRA_WAIT:
