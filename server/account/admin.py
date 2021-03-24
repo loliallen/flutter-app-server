@@ -4,6 +4,8 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.admin import UserAdmin
 from .models import User, Child
 
+class ChildInline(admin.TabularInline):
+    model = Child
 
 class UserCreationForm(forms.ModelForm):
     class Meta:
@@ -20,6 +22,33 @@ class UserCreationForm(forms.ModelForm):
 
 class CustomUserAdmin(UserAdmin):
     model = User
+    fieldsets = (
+        (None, { 'fields' : (
+            'username',
+            'password',
+        )}),
+        ("Personal Info", { 'fields' : (
+            'email',
+            'first_name',
+            'last_name',
+            'age',
+            'children',
+        )}),
+        ("Permissions", { 'fields' : (
+            'is_active',
+            'is_staff',
+            'is_superuser',
+        )}),
+        ("important Dates", { 'fields' : (
+            'date_joined',
+            'last_login',
+        )}),
+        ("Additional Fields", {'fields': (
+            'diaries',
+            'transfer_groups',
+            'done_transfer_groups'
+        )}),
+    )
     # The forms to add and change user instances
 
 # Register your models here.
