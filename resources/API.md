@@ -24,16 +24,6 @@ Body:
     "username": "uname",
     "password": "pwd",
     "age": 1,
-    "children": [
-        {
-            "sex": "male|female",
-            "age": 12,
-        },
-        {
-            "sex": "male|female",
-            "age": 12,
-        },
-    ]
 }
 ```
 Response:
@@ -62,6 +52,41 @@ Response:
 ```
 
 > For each subsequent query put the field `auth_token` in the header `Authorization: Token <token>`
+
+
+### Create Children
+
+> POST account/children
+
+Body:
+```json
+{
+    "children": [
+        {
+            "sex": "M|F",
+            "age": 12,
+        },
+        {
+            "sex": "M|F",
+            "age": 12,
+        },
+    ]
+}
+```
+
+Response:
+```json
+[
+    {
+        "sex": "M|F",
+        "age": 12,
+    },
+    {
+        "sex": "M|F",
+        "age": 12,
+    },
+]
+```
 
 -----
 -----

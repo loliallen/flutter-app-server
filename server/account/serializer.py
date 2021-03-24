@@ -10,8 +10,6 @@ import string
 
 
 class CreateUserSerializer(ModelSerializer):
-    children = ListField(required=False)
-    diaries = ListField(required=False)
     class Meta:
         model = User
         fields = (
@@ -23,6 +21,7 @@ class CreateUserSerializer(ModelSerializer):
     def create(self, validated_data):
         token = ''.join(
             random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for x in range(16))
+        print(validated_data.get('username'))
         user = User.objects.create(
             username=validated_data.get('username'),
             email=validated_data.get('email'),
