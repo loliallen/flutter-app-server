@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from djongo import models
+from django import forms
 
 
 class EmbQuestion(models.Model):
@@ -11,37 +12,43 @@ class EmbQuestion(models.Model):
 
 
 SEX_CHOICES = (
+    ('N', 'none'),
     ('F', 'female'),
     ('M', 'male'),
 )
 
 class Child(models.Model):
-    sex = models.TextField(choices=SEX_CHOICES) 
+    _id = models.ObjectIdField(primary_key=True)
+    sex = models.TextField(choices=SEX_CHOICES, default="N")    
     age = models.IntegerField(default=0)
 
-    class Meta:
-        abstract = True
-
+    def __str__(self):
+        return "{} - {}".format(self.sex, self.age)
 
 class User(AbstractUser):
     _id = models.ObjectIdField(primary_key=True)
-    age = models.IntegerField()
-    diaries = models.ArrayReferenceField(to='api.Diary', related_name="author")
+    username = models.TextField(unique=True)
+    email = models.EmailField(unique=True)
+    age = models.IntegerField(blank=True)
+    diaries = models.ArrayReferenceField(to='api.Diary', related_name="author", blank=True)
     transfer_groups = models.ArrayReferenceField(
         to='api.TransferGroup', 
         related_name="from_user",
         blank=True,
         default=[]
     )
-    username = models.TextField(unique=True)
-    email = models.EmailField(unique=True)
     done_transfer_groups = models.ArrayReferenceField(
         to='api.TransferGroup', 
         related_name="from_done",
         blank=True,
         default=[]
     )
-    children = models.ArrayField(Child, default=[], null=True)
+    children = models.ArrayReferenceField(
+        to=Child, 
+        related_name="parent",
+        blank=True,
+        default=[]
+    )
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ['username']
   

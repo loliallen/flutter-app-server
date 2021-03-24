@@ -11,7 +11,7 @@ urlpatterns = [
     path('transfer/', TransferView.as_view()),
     path('question/<str:mood>', QuestionView.as_view()),
     path('', include('psycologist.urls')),
-    path('', include('admin.urls'))
+    path('', include('myadmin.urls'))
 ]
 
 # path('diary/<str:id>', DiaryView.as_view()),

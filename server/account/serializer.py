@@ -1,7 +1,7 @@
 from django.contrib.auth.hashers import make_password
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, ListField
 
-from .models import AbstractUser, User
+from .models import AbstractUser, User, Child
 
 import random
 import string
@@ -10,6 +10,8 @@ import string
 
 
 class CreateUserSerializer(ModelSerializer):
+    children = ListField(required=False)
+    diaries = ListField(required=False)
     class Meta:
         model = User
         fields = (
@@ -30,19 +32,10 @@ class CreateUserSerializer(ModelSerializer):
         )
         return user
 
-
-# class UserInfoSerializer(ModelSerializer):
-#     posts = serializers.SerializerMethodField()
-
-#     def get_posts(self, obj):
-#         json_string = django_serializers.serialize('json',
-#                                                    Article.objects.filter(author=obj))
-#         return json_string
-
-#     class Meta:
-#         model = User
-#         fields = "__all__"
-
+class ChildSerializer(ModelSerializer):
+    class Meta:
+        model = Child
+        fields = ('sex', 'age')
 
 class AllUserIdSerializer(ModelSerializer):
     class Meta:
