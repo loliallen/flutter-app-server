@@ -31,6 +31,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     age = models.IntegerField(blank=True)
     diaries = models.ArrayReferenceField(to='api.Diary', related_name="author", blank=True)
+    neighbor_description = models.TextField(blank=True)
     transfer_groups = models.ArrayReferenceField(
         to='api.TransferGroup', 
         related_name="from_user",

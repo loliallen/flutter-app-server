@@ -41,6 +41,7 @@ class TitleRecordSerializer(serializers.ModelSerializer):
 
 class DiarySerializer(serializers.ModelSerializer):
     records = RecordSelializer(required=False, many=True)
+    
     class Meta:
         model = Diary
         fields = "__all__"

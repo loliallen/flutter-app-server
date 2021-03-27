@@ -76,7 +76,9 @@ class Diary(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     title = models.TextField()
     records = models.ArrayReferenceField(to=Record, related_name="diary")
-
+    
+    created = models.DateTimeField(default=datetime.now)
+    
     def __str__(self):
         return self.title
 

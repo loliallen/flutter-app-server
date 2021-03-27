@@ -13,6 +13,10 @@
 ### Methods
 - Create User (Sign Up)
 - Login
+- Create Children
+- Remove Children
+- Update
+- Get Info
 
 ### Create User (SignUp)
 > POST /auth/users/
@@ -53,9 +57,7 @@ Response:
 
 > For each subsequent query put the field `auth_token` in the header `Authorization: Token <token>`
 
-
-### Create Children
-
+### Add(Create) children
 > POST account/children
 
 Body:
@@ -70,6 +72,19 @@ Body:
             "sex": "M|F",
             "age": 12,
         },
+    ]
+}
+```
+
+### Remove (dead?) children
+> DELETE account/children
+
+Body:
+```json
+{
+    "children": [
+        "$oid",
+        "$oid",
     ]
 }
 ```
@@ -92,11 +107,28 @@ Response:
 -----
 -----
 
+
+### Update Neighbor info
+> PUT account/
+
+body:
+```json
+{
+    "neighbor_description" : "str"
+}
+```
+
+response:
+```json
+{
+    "message" : "updated"
+}
+```
+
 # Diary
 ### Methods
 - Get Diaries
 - Create Diary
-- Append Record
 
 ### Get Diaries
 > GET /api/diary
@@ -114,10 +146,21 @@ Response:
                 "file_type": "i"
             }
         ],
-        "title": "user1 tit123le"
+        "title": "user1 tit123le",
+        "created": "datetime"
     }
 ]
 ```
+
+### Create Diary
+> POST /api/diary/
+body
+```json
+{
+    "title": "title"
+}
+```
+
 -----
 -----
 -----

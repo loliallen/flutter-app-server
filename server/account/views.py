@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 from .models import User, Child
-from .serializer import ChildSerializer
+from .serializer import ChildSerializer, CreateUserSerializer
 # Create your views here.
 
 class ChildView(APIView):
@@ -27,3 +27,27 @@ class ChildView(APIView):
             return Response(data.data)
         except:
             return Response("Not valid data", status=403)
+
+    def delete(self, request):
+        data = request.data
+
+        children = data.children
+
+        user = User.objects.get(pk=request.user._id)
+
+        for child_id in children:
+            child = Child.objects.get(pk=child_id)
+            user.children.remove(child)
+        user.save()
+
+        return Response({"message": "Done"})
+
+class UserView(APIView):
+    permission_classes=[IsAuthenticated]
+    def put(self, request):
+        data = request.data
+        user = User.objects.get(pk=request.user._id)
+        user.update(**data)
+
+        res_data = CreateUserSerializer(user)
+        return Response(res_data.data)
