@@ -125,6 +125,9 @@ response:
 }
 ```
 
+### Get info
+> GET auth/users/me
+
 # Diary
 ### Methods
 - Get Diaries
