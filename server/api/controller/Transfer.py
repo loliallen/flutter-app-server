@@ -34,7 +34,7 @@ def GetTransfers(filter=None):
 
 def GetPsyTransfers(psy_id):
     psy = Psycologist.objects.get(_id=ObjectId(psy_id))
-    transfers = psy.shared_transfers.all()
+    transfers = psy.shared_transfers.filter(moderation_status="c")
 
     data = TransferSerializer(transfers, many=True)
 
@@ -45,7 +45,7 @@ def GetPsyTransfers(psy_id):
 
 def GetTranferGroup(tid):
     try:
-        tranfer = TransferGroup.objects.get(_id=ObjectId(tid), moderation_status='c'    )
+        tranfer = TransferGroup.objects.get(_id=ObjectId(tid), moderation_status='c')
         data = TransferGroupSerializer(tranfer)
         return data.data
     except TransferGroup.DoesNotExist:
@@ -137,6 +137,7 @@ def UpdateTransferGroup(tgid, updates, psy: Psycologist):
             transfer.save()
 
         transfer_group.feedback = updates['feedback']
+        transfer_group.moderation_status = 'r'
         transfer.status = updates['status']
         transfer_group.save()
 

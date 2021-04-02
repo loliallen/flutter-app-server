@@ -48,7 +48,7 @@ class SupervisorAuth(APIView):
 #  supervisor transfers
 class TransferList(APIView):
     def get(self, request):
-        trgs = GetTransfers()
+        trgs = GetTransfers({"moderation_status": "r"})
         return Response(trgs)
 
 class TransferView(APIView):

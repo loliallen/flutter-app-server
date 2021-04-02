@@ -15,7 +15,7 @@ class User(AbstractBaseUser):
     password = models.TextField(default="*()Shalom")
     name = models.TextField(default="")
     username = models.TextField(unique=True)
-    delay_duration = models.IntegerField(null=True, blank=True, default=1)
+    load = models.IntegerField(null=True, blank=True, default=1)
     patients = models.ArrayReferenceField(
         to='account.User', 
         related_name="psycologist",

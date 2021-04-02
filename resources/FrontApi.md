@@ -120,7 +120,7 @@ Body:
 ```
 
 ### Get Transfer(s)
-
+!!!
 Get Transfers
 > GET supervisor/transfers/
 
@@ -211,6 +211,20 @@ response:
 # Supervisor (Manage)
 
 ## Psycologist patients
+
+### Update Psy Info
+> POST /api/psycologists/manage/<str:id>
+>> id - psychologist ID
+
+body:
+```json
+{
+    "load": 3,
+    "verified": true|false,
+    "name": "new name",
+    "username": "new username",
+}
+```
 
 ### Append patient to psy
 

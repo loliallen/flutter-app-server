@@ -51,8 +51,10 @@ class TransferGroup(models.Model):
     )
     status = models.TextField(choices=status_choices, default='s')
     moderation_status = models.TextField(choices=moderation_status_choices, default='n')
-    created = models.DateTimeField(default=datetime.now)
     feedback = models.TextField(blank=True)
+
+    created = models.DateTimeField(default=datetime.now)
+    deadline =  models.DateTimeField(default=datetime.now)
 
 class Transfer(models.Model):
     _id = models.ObjectIdField(primary_key=True)
@@ -76,7 +78,7 @@ class Diary(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     title = models.TextField()
     records = models.ArrayReferenceField(to=Record, related_name="diary")
-    
+    question = models.ForeignKey(to=Question, on_delete=models.CASCADE, null=True)
     created = models.DateTimeField(default=datetime.now)
     
     def __str__(self):
@@ -87,6 +89,7 @@ class Question(models.Model):
     _id = models.ObjectIdField(primary_key=True)
     content = models.TextField()
     mood = models.TextField(choices=mood_type_choice)
+    creator = models.ForeignKey(to="psycologist.User", on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return "{} - {}".format(self.content, self.mood)
