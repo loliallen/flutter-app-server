@@ -24,6 +24,7 @@ class TransferView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
         transfers = GetUserTransfers(user_id=request.user._id)
+        
 
         return Response(transfers, status=200)
 

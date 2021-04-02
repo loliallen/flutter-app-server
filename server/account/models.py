@@ -50,6 +50,7 @@ class User(AbstractUser):
         blank=True,
         default=[]
     )
+    
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ['username']
   

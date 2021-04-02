@@ -3,13 +3,14 @@ from djongo import models
 import string
 import random
 from django.db.models import signals
+from django.contrib.auth.models import AbstractBaseUser
 # Create your models here.
 
 
 def random_string():
     return ''.join([random.choice(string.ascii_lowercase+string.ascii_uppercase+string.digits) for i in range(64)])
 
-class User(models.Model):
+class User(AbstractBaseUser):
     _id = models.ObjectIdField(primary_key=True)
     password = models.TextField(default="*()Shalom")
     name = models.TextField(default="")
@@ -42,6 +43,8 @@ class User(models.Model):
     verified = models.BooleanField(default=False)
 
     token = models.TextField(default=random_string)
+
+    USERNAME_FIELD = "username"
 
     def __str__(self):
         return "{}({})".format(self.name, self._id)

@@ -12,7 +12,7 @@ from bson.objectid import ObjectId
 
 def GetUserTransfers(user_id):
     user = User.objects.get(_id=ObjectId(user_id))
-    transfers = user.transfer_groups.all()
+    transfers = user.transfer_groups.filter()
 
     data = TransferGroupSerializer(transfers, many=True)
 
